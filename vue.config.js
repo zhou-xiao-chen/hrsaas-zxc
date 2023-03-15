@@ -27,8 +27,8 @@ module.exports = {
   publicPath: '/',
   outputDir: 'dist',
   assetsDir: 'static',
-  // lintOnSave: process.env.NODE_ENV === 'development',
-  lintOnSave: false,
+  lintOnSave: process.env.NODE_ENV === 'development',
+  // lintOnSave: false,
   productionSourceMap: false,
   devServer: {
     port: port,
@@ -36,8 +36,17 @@ module.exports = {
     overlay: {
       warnings: false,
       errors: true
-    }
+    },
     // before: require('./mock/mock-server.js')
+    proxy: {
+      // 当我们的本地的请求 有/api的时候，就会代理我们的请求地址向另外一个服务器发出请求
+      '/api': {
+        // target: 'http://ihrm.itheima.net/', // 跨域请求的地址 此服务器管理员密码禁止修改
+        // 另外一个服务器地址：http://ihrm-java.itheima.net/
+        target: 'http://ihrm-java.itheima.net/',
+        changeOrigin: true // 只有这个值为true的情况下 才表示开启跨域
+      }
+    }
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
