@@ -62,3 +62,31 @@
 //   // finish progress bar
 //   NProgress.done()
 // })
+import router from '@/router'
+import store from '@/store'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+
+const whiteList = ['/login', '/404']
+
+router.beforeEach((to, from, next) => {
+  NProgress.start()
+  if (store.getters.token) {
+    if (to.path === '/login') {
+      next('/')
+    } else {
+      next()
+    }
+  } else {
+    if (whiteList.some(to.path)) {
+      next()
+    } else {
+      next('/login')
+    }
+  }
+  NProgress.done()
+})
+
+router.afterEach(function () {
+  NProgress.done()
+})
